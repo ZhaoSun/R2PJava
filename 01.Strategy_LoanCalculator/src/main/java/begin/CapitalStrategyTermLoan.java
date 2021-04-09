@@ -7,8 +7,4 @@ public class CapitalStrategyTermLoan extends CapitalStrategy {
         return loan.getCommitment() * loan.duration() * riskFactor(loan);
     }
 
-    @Override
-    public double duration(Loan loan) {
-        return weightedAverageDuration(loan);
-    }
 }
