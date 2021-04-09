@@ -8,4 +8,9 @@ public class CapitalStrategyRevolver extends CapitalStrategy {
                 + (loan.unusedRiskAmount() * loan.duration() * unusedRiskFactor(loan));
     }
 
+    @Override
+    public double duration(Loan loan) {
+        return yearsTo(loan.getExpiry(), loan);
+    }
+
 }

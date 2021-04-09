@@ -13,13 +13,7 @@ public abstract class CapitalStrategy {
     public abstract double capital(Loan loan);
 
     // 贷款周期计算
-    public double duration(Loan loan) {
-        if (loan.getExpiry() == null && loan.getMaturity() != null) 		// 定期贷款
-            return weightedAverageDuration(loan);
-        else if (loan.getExpiry() != null && loan.getMaturity() == null) 	// 循环或建议信用额度贷款
-            return yearsTo(loan.getExpiry(), loan);
-        return 0.0;
-    }
+    public abstract double duration(Loan loan);
 
     // 获取风险因素
     protected double riskFactor(Loan loan) {
@@ -32,7 +26,7 @@ public abstract class CapitalStrategy {
     }
 
     // 加权平均周期
-    private double weightedAverageDuration(Loan loan) {
+    protected double weightedAverageDuration(Loan loan) {
         double duration = 0.0;
         double weightedAverage = 0.0;
         double sumOfPayments = 0.0;
@@ -51,7 +45,7 @@ public abstract class CapitalStrategy {
     }
 
     // 年数差
-    private double yearsTo(Date endDate, Loan loan) {
+    protected double yearsTo(Date endDate, Loan loan) {
         Date beginDate = (loan.getToday() == null ? loan.getStart() : loan.getToday());
         return ((endDate.getTime() - beginDate.getTime()) / MILLIS_PER_DAY) / DAYS_PER_YEAR;
     }
