@@ -6,7 +6,6 @@ import java.util.List;
 
 public class Loan {
 
-    private final CapitalStrategy capitalStrategy;
     private Date expiry;                // 有效日
     private Date maturity;                // 到期日
     private Date start;                // 起始日
@@ -32,7 +31,6 @@ public class Loan {
 
         this.unusedPercentage = 1.0;
         this.payments = new LinkedList<Payment>();
-        capitalStrategy = new CapitalStrategy();
     }
 
     // 创建定期贷款
@@ -59,12 +57,12 @@ public class Loan {
     //////////////////// 贷款金额周期计算 ////////////////////
     // 贷款金额计算
     public double capital() {
-        return capitalStrategy.capital(this);
+        return new CapitalStrategy().capital(this);
     }
 
     // 贷款周期计算
     public double duration() {
-        return capitalStrategy.duration(this);
+        return new CapitalStrategy().duration(this);
     }
 
     //////////////////// 贷款金额周期计算辅助方法 ////////////////////
