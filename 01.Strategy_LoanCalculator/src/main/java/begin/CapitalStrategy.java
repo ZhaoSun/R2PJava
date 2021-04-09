@@ -3,14 +3,34 @@ package begin;
 import java.util.Date;
 import java.util.Iterator;
 
-public abstract class CapitalStrategy {
+public class CapitalStrategy {
 
     private static final long MILLIS_PER_DAY = 86400000;
     private static final long DAYS_PER_YEAR = 365;
 
     //////////////////// 贷款金额周期计算 ////////////////////
     // 贷款金额计算
-    public abstract double capital(Loan loan);
+    public double capital(Loan loan) {
+        // 有效日为空，到期日不为空，为定期贷款
+        // 资金计算方法：承诺金额 * 期限 * 风险因素
+        if (loan.getExpiry() == null && loan.getMaturity() != null)
+            return loan.getCommitment() * loan.duration() * riskFactor(loan);
+
+        // 有效日不为空，到期日为空，为循环贷款或建议信用额度贷款
+        // 若未用份额不为 100%，为信用额度贷款，否则为循环贷款
+        if (loan.getExpiry() != null && loan.getMaturity() == null) {
+            if (loan.getUnusedPercentage() != 1.0)
+                // 信用额度贷款
+                // 资金计算方法：承诺金额 * 未用份额 * 期限 * 风险因素
+                return loan.getCommitment() * loan.getUnusedPercentage() * loan.duration() * riskFactor(loan);
+            else
+                // 循环贷款
+                // 资金计算方法：未清风险
+                return (loan.outstandingRiskAmount() * loan.duration() * riskFactor(loan))
+                        + (loan.unusedRiskAmount() * loan.duration() * unusedRiskFactor(loan));
+        }
+        return 0.0;
+    }
 
     // 贷款周期计算
     public double duration(Loan loan) {
@@ -22,12 +42,12 @@ public abstract class CapitalStrategy {
     }
 
     // 获取风险因素
-    protected double riskFactor(Loan loan) {
+    private double riskFactor(Loan loan) {
         return RiskFactor.getFactors().forRating(loan.getRiskRating());
     }
 
     // 获取未使用风险因素
-    protected double unusedRiskFactor(Loan loan) {
+    private double unusedRiskFactor(Loan loan) {
         return UnusedRiskFactors.getFactors().forRating(loan.getRiskRating());
     }
 
