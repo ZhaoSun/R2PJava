@@ -22,7 +22,7 @@ public class Loan {
     //////////////////// 对象构造相关 ////////////////////
     // 构造函数
     /* 1. private constructor 2. too many parameter with close type near each other */
-    private Loan(double commitment, double outstanding, Date start, Date expiry, Date maturity, int riskRating) {
+    private Loan(double commitment, double outstanding, Date start, Date expiry, Date maturity, int riskRating, CapitalStrategy strategy) {
         this.commitment = commitment;
         this.outstanding = outstanding;
         this.start = start;
@@ -32,12 +32,12 @@ public class Loan {
 
         this.unusedPercentage = 1.0;
         this.payments = new LinkedList<Payment>();
-        capitalStrategy = new CapitalStrategy();
+        capitalStrategy = strategy;
     }
 
     // 创建定期贷款
     public static Loan newTermLoan(double commitment, Date start, Date maturity, int riskRating) {
-        return new Loan(commitment, commitment, start, null, maturity, riskRating);
+        return new Loan(commitment, commitment, start, null, maturity, riskRating, new CapitalStrategy());
     }
 
     // 创建信用额度贷款
@@ -45,7 +45,7 @@ public class Loan {
         if (riskRating > 3)
             return null;
 
-        Loan advisedLine = new Loan(commitment, 0, start, expiry, null, riskRating);
+        Loan advisedLine = new Loan(commitment, 0, start, expiry, null, riskRating, new CapitalStrategy());
         advisedLine.setUnusedPercentage(0.1);
 
         return advisedLine;
@@ -53,7 +53,7 @@ public class Loan {
 
     // 创建循环贷款
     public static Loan newRevolver(double commitment, Date start, Date expiry, int riskRating) {
-        return new Loan(commitment, 0, start, expiry, null, riskRating);
+        return new Loan(commitment, 0, start, expiry, null, riskRating, new CapitalStrategy());
     }
 
     //////////////////// 贷款金额周期计算 ////////////////////
