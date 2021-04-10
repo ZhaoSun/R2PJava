@@ -24,19 +24,19 @@ public class SystemPermissionTest_UNIX_Begin {
         // 直接 Claim 操作
         // 结果：CLAIMED 状态， isGranted = false
         permission.claimedBy(admin);
-        assertEquals("claimed", PermissionState.CLAIMED, permission.getState());
+        assertEquals("claimed", permission.CLAIMED, permission.state());
         assertEquals("claimed", false, permission.isGranted());
 
         // 先 Claim 再进行 Grant 操作，
         // 结果：UNIX_REQUESTED 状态， isGranted = false
         permission.grantedBy(admin);
-        assertEquals("granted", PermissionState.UNIX_REQUESTED, permission.getState());
+        assertEquals("granted", permission.UNIX_REQUESTED, permission.state());
         assertEquals("granted", false, permission.isGranted());
 
         // 再进行 Claim 操作
         // 结果：UNIX_CLAIMED 状态， isGranted = false
         permission.claimedBy(admin);
-        assertEquals("granted", PermissionState.UNIX_CLAIMED, permission.getState());
+        assertEquals("granted", permission.UNIX_CLAIMED, permission.state());
         assertEquals("granted", false, permission.isGranted());
     }
 
@@ -45,7 +45,7 @@ public class SystemPermissionTest_UNIX_Begin {
         // 未 Claim 的状态进行 Denied 操作，
         // 结果：REQUESTED 状态， isGranted = false
         permission.grantedBy(admin);
-        assertEquals("requested", PermissionState.REQUESTED, permission.getState());
+        assertEquals("requested", permission.REQUESTED, permission.state());
         assertEquals("not granted", false, permission.isGranted());
 
         // 先 Claim 再进行 Grant 操作，进入 UNIX_REQUESTED 状态
@@ -55,7 +55,7 @@ public class SystemPermissionTest_UNIX_Begin {
         permission.grantedBy(admin);
         permission.claimedBy(admin);
         permission.deniedBy(admin);
-        assertEquals("granted", PermissionState.DENIED, permission.getState());
+        assertEquals("granted", permission.DENIED, permission.state());
         assertEquals("granted", false, permission.isGranted());
     }
 
@@ -64,7 +64,7 @@ public class SystemPermissionTest_UNIX_Begin {
         // 未 Claim 的状态进行 Grant 操作，
         // 结果：REQUESTED 状态， isGranted = false
         permission.grantedBy(admin);
-        assertEquals("requested", PermissionState.REQUESTED, permission.getState());
+        assertEquals("requested", permission.REQUESTED, permission.state());
         assertEquals("not granted", false, permission.isGranted());
 
         // 先 Claim 再进行 Grant 操作，进入 UNIX_REQUESTED 状态
@@ -74,7 +74,7 @@ public class SystemPermissionTest_UNIX_Begin {
         permission.grantedBy(admin);
         permission.claimedBy(admin);
         permission.grantedBy(admin);
-        assertEquals("granted", PermissionState.GRANTED, permission.getState());
+        assertEquals("granted", permission.GRANTED, permission.state());
         assertEquals("granted", true, permission.isGranted());
     }
 }
